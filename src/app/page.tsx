@@ -1,101 +1,146 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import Link from "next/link";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { StatusBadge } from "@/components/StatusBadge";
+import { FileText, AlertCircle, TrendingUp } from "lucide-react";
+import {
+  ABRECHNUNGEN,
+  getSaegwerkName,
+  getBauerName,
+  berechneAbrechnungsSumme,
+  berechneGesamtFmo,
+} from "@/data/mock-data";
+
+export default function DashboardPage() {
+  const neueCount = ABRECHNUNGEN.filter((a) => a.status === "neu").length;
+  const pruefungCount = ABRECHNUNGEN.filter((a) => a.status === "in_pruefung").length;
+  const gesamtFmo = ABRECHNUNGEN.reduce((sum, a) => sum + berechneGesamtFmo(a), 0);
+  const letzteFuenf = [...ABRECHNUNGEN]
+    .sort((a, b) => b.datum.localeCompare(a.datum))
+    .slice(0, 5);
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div>
+      <h1 className="text-2xl font-bold text-foreground mb-6">Dashboard</h1>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      {/* Kacheln */}
+      <div className="grid grid-cols-3 gap-6 mb-8">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Neue Abrechnungen
+            </CardTitle>
+            <FileText className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold">{neueCount}</div>
+            <p className="text-xs text-muted-foreground mt-1">warten auf Bearbeitung</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Offene Validierungen
+            </CardTitle>
+            <AlertCircle className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold">{pruefungCount}</div>
+            <p className="text-xs text-muted-foreground mt-1">in Prüfung</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Gesamt-FMO diesen Monat
+            </CardTitle>
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold">
+              {gesamtFmo.toLocaleString("de-AT", { minimumFractionDigits: 2 })}
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">Festmeter ohne Rinde</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Letzte Abrechnungen */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Letzte Abrechnungen</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Datum</TableHead>
+                <TableHead>Sägewerk</TableHead>
+                <TableHead>Lieferschein</TableHead>
+                <TableHead>Bauer</TableHead>
+                <TableHead>Menge</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="text-right">Betrag</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {letzteFuenf.map((abr) => (
+                <TableRow key={abr.id} className="cursor-pointer hover:bg-muted/50">
+                  <TableCell>
+                    <Link href={`/abrechnungen/${abr.id}`} className="block">
+                      {new Date(abr.datum).toLocaleDateString("de-AT")}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Link href={`/abrechnungen/${abr.id}`} className="block">
+                      {getSaegwerkName(abr.saegwerkId)}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Link href={`/abrechnungen/${abr.id}`} className="block font-mono text-sm">
+                      {abr.lieferscheinNr}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Link href={`/abrechnungen/${abr.id}`} className="block">
+                      {getBauerName(abr.bauerId)}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Link href={`/abrechnungen/${abr.id}`} className="block">
+                      {berechneGesamtFmo(abr).toLocaleString("de-AT", { minimumFractionDigits: 2 })} FMO
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Link href={`/abrechnungen/${abr.id}`}>
+                      <StatusBadge status={abr.status} />
+                    </Link>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Link href={`/abrechnungen/${abr.id}`} className="block font-medium">
+                      {berechneAbrechnungsSumme(abr).toLocaleString("de-AT", {
+                        style: "currency",
+                        currency: "EUR",
+                      })}
+                    </Link>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
     </div>
   );
 }
