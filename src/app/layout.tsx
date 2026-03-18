@@ -21,8 +21,8 @@ export default function RootLayout({
       <body className={`${inter.variable} font-sans antialiased`}>
         <div className="flex min-h-screen">
           <Sidebar />
-          <main className="flex-1 ml-60">
-            <div className="p-8">{children}</div>
+          <main className="flex-1 md:ml-60">
+            <div className="p-4 pt-16 md:pt-8 md:p-8">{children}</div>
           </main>
         </div>
         <Toaster position="bottom-right" richColors />

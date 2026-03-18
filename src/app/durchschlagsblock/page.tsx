@@ -101,7 +101,7 @@ export default function DurchschlagsblockPage() {
           <CardTitle className="text-lg">Neuer Eintrag</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 gap-4 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
             <div>
               <Label>Bauer</Label>
               <Select value={bauerId} onValueChange={(v) => v && setBauerId(v)}>
@@ -128,6 +128,7 @@ export default function DurchschlagsblockPage() {
           </div>
 
           {/* Positions-Tabelle */}
+          <div className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
@@ -237,8 +238,9 @@ export default function DurchschlagsblockPage() {
               ))}
             </TableBody>
           </Table>
+          </div>
 
-          <div className="flex gap-3 mt-4">
+          <div className="flex flex-wrap gap-3 mt-4">
             <Button variant="outline" size="sm" onClick={addPosition}>
               <Plus className="h-4 w-4 mr-1" />
               Zeile hinzufügen

@@ -62,7 +62,7 @@ export default function EinstellungenPage() {
       <h1 className="text-2xl font-bold text-foreground mb-6">Einstellungen</h1>
 
       <Tabs defaultValue="preistabelle">
-        <TabsList className="mb-6">
+        <TabsList className="mb-6 flex-wrap h-auto">
           <TabsTrigger value="preistabelle">Preistabelle</TabsTrigger>
           <TabsTrigger value="aufschlaege">Aufschläge</TabsTrigger>
           <TabsTrigger value="transport">Transport</TabsTrigger>
@@ -79,6 +79,7 @@ export default function EinstellungenPage() {
               </p>
             </CardHeader>
             <CardContent>
+              <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -110,6 +111,7 @@ export default function EinstellungenPage() {
                   })}
                 </TableBody>
               </Table>
+              </div>
               <Button
                 className="mt-4"
                 onClick={() => toast.success("Preistabelle gespeichert")}
@@ -131,6 +133,7 @@ export default function EinstellungenPage() {
               </p>
             </CardHeader>
             <CardContent>
+              <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -159,6 +162,7 @@ export default function EinstellungenPage() {
                   ))}
                 </TableBody>
               </Table>
+              </div>
               <Button
                 className="mt-4"
                 onClick={() => toast.success("Aufschläge gespeichert")}
@@ -213,7 +217,7 @@ export default function EinstellungenPage() {
               <div className="space-y-6">
                 {saegewerke.map((sw) => (
                   <div key={sw.id} className="border rounded-lg p-4 space-y-3">
-                    <div className="grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                       <div>
                         <label className="text-sm font-medium">Name</label>
                         <Input

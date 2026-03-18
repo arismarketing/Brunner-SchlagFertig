@@ -84,26 +84,28 @@ export default function AbrechnungDetailPage() {
   return (
     <div>
       {/* Header */}
-      <div className="flex items-center gap-4 mb-6">
+      <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-6">
         <Button variant="ghost" size="sm" onClick={() => router.push("/abrechnungen")}>
           <ArrowLeft className="h-4 w-4 mr-1" />
           Zurück
         </Button>
-        <div className="flex-1">
-          <h1 className="text-2xl font-bold">Abrechnung {abrechnung.lieferscheinNr}</h1>
+        <div className="flex-1 min-w-0">
+          <h1 className="text-xl sm:text-2xl font-bold truncate">Abrechnung {abrechnung.lieferscheinNr}</h1>
         </div>
-        <Badge className="bg-blue-50 text-blue-700 hover:bg-blue-50 gap-1">
-          <Mail className="h-3 w-3" />
-          Quelle: E-Mail
-        </Badge>
-        <StatusBadge status={abrechnung.status} />
-        <KonfidenzBadge level={abrechnung.konfidenz} />
+        <div className="flex flex-wrap gap-2">
+          <Badge className="bg-blue-50 text-blue-700 hover:bg-blue-50 gap-1">
+            <Mail className="h-3 w-3" />
+            Quelle: E-Mail
+          </Badge>
+          <StatusBadge status={abrechnung.status} />
+          <KonfidenzBadge level={abrechnung.konfidenz} />
+        </div>
       </div>
 
       {/* Meta-Daten + PDF-Button */}
       <Card className="mb-6">
         <CardContent className="pt-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             <div>
               <p className="text-sm text-muted-foreground">Sägewerk</p>
               <p className="font-medium">{getSaegwerkName(abrechnung.saegwerkId)}</p>
@@ -191,6 +193,7 @@ export default function AbrechnungDetailPage() {
           <p className="text-sm text-muted-foreground">Klicken Sie auf einen Wert, um ihn zu bearbeiten</p>
         </CardHeader>
         <CardContent>
+          <div className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
@@ -245,11 +248,12 @@ export default function AbrechnungDetailPage() {
               </TableRow>
             </TableFooter>
           </Table>
+          </div>
         </CardContent>
       </Card>
 
       {/* Aufschläge und Berechnung */}
-      <div className="grid grid-cols-2 gap-6 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6">
         <Card>
           <CardHeader>
             <CardTitle className="text-lg">Aufschläge & Transport</CardTitle>
@@ -318,7 +322,7 @@ export default function AbrechnungDetailPage() {
       </div>
 
       {/* Aktions-Buttons */}
-      <div className="flex gap-3">
+      <div className="flex flex-wrap gap-3">
         <Button
           className="bg-green-600 hover:bg-green-700"
           onClick={() => toast.success("Abrechnung erfolgreich freigegeben")}

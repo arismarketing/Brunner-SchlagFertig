@@ -97,7 +97,7 @@ export default function BauernPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
         <h1 className="text-2xl font-bold text-foreground">Bauern-Stammdaten</h1>
         <Dialog open={dialogOpen} onOpenChange={(open) => { setDialogOpen(open); if (!open) resetForm(); }}>
           <DialogTrigger render={<Button />}>
@@ -161,12 +161,13 @@ export default function BauernPage() {
       {/* Tabelle */}
       <Card>
         <CardContent className="pt-6">
+          <div className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Kundennr.</TableHead>
+                <TableHead className="hidden sm:table-cell">Kundennr.</TableHead>
                 <TableHead>Name</TableHead>
-                <TableHead>Adresse</TableHead>
+                <TableHead className="hidden md:table-cell">Adresse</TableHead>
                 <TableHead>USt-Status</TableHead>
                 <TableHead className="w-20">Aktion</TableHead>
               </TableRow>
@@ -174,9 +175,9 @@ export default function BauernPage() {
             <TableBody>
               {filtered.map((bauer) => (
                 <TableRow key={bauer.id}>
-                  <TableCell className="font-mono text-sm">{bauer.kundennr}</TableCell>
+                  <TableCell className="hidden sm:table-cell font-mono text-sm">{bauer.kundennr}</TableCell>
                   <TableCell className="font-medium">{bauer.name}</TableCell>
-                  <TableCell className="text-sm text-muted-foreground">{bauer.adresse}</TableCell>
+                  <TableCell className="hidden md:table-cell text-sm text-muted-foreground">{bauer.adresse}</TableCell>
                   <TableCell>
                     <Badge
                       className={
@@ -204,6 +205,7 @@ export default function BauernPage() {
               )}
             </TableBody>
           </Table>
+          </div>
         </CardContent>
       </Card>
     </div>

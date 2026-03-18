@@ -33,7 +33,7 @@ export default function DashboardPage() {
       <h1 className="text-2xl font-bold text-foreground mb-6">Dashboard</h1>
 
       {/* Kacheln */}
-      <div className="grid grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mb-8">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -82,14 +82,15 @@ export default function DashboardPage() {
           <CardTitle className="text-lg">Letzte Abrechnungen</CardTitle>
         </CardHeader>
         <CardContent>
+          <div className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Datum</TableHead>
                 <TableHead>Sägewerk</TableHead>
-                <TableHead>Lieferschein</TableHead>
-                <TableHead>Bauer</TableHead>
-                <TableHead>Menge</TableHead>
+                <TableHead className="hidden sm:table-cell">Lieferschein</TableHead>
+                <TableHead className="hidden md:table-cell">Bauer</TableHead>
+                <TableHead className="hidden sm:table-cell">Menge</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Betrag</TableHead>
               </TableRow>
@@ -107,17 +108,17 @@ export default function DashboardPage() {
                       {getSaegwerkName(abr.saegwerkId)}
                     </Link>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="hidden sm:table-cell">
                     <Link href={`/abrechnungen/${abr.id}`} className="block font-mono text-sm">
                       {abr.lieferscheinNr}
                     </Link>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="hidden md:table-cell">
                     <Link href={`/abrechnungen/${abr.id}`} className="block">
                       {getBauerName(abr.bauerId)}
                     </Link>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="hidden sm:table-cell">
                     <Link href={`/abrechnungen/${abr.id}`} className="block">
                       {berechneGesamtFmo(abr).toLocaleString("de-AT", { minimumFractionDigits: 2 })} FMO
                     </Link>
@@ -139,6 +140,7 @@ export default function DashboardPage() {
               ))}
             </TableBody>
           </Table>
+          </div>
         </CardContent>
       </Card>
     </div>

@@ -44,9 +44,9 @@ export default function AbrechnungenPage() {
       <h1 className="text-2xl font-bold text-foreground mb-6">Abrechnungen</h1>
 
       {/* Filter */}
-      <div className="flex gap-4 mb-6">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6">
         <Select value={filterSaegewerk} onValueChange={(v) => v && setFilterSaegewerk(v)}>
-          <SelectTrigger className="w-56">
+          <SelectTrigger className="w-full sm:w-56">
             <SelectValue placeholder="Sägewerk filtern" />
           </SelectTrigger>
           <SelectContent>
@@ -60,7 +60,7 @@ export default function AbrechnungenPage() {
         </Select>
 
         <Select value={filterStatus} onValueChange={(v) => v && setFilterStatus(v)}>
-          <SelectTrigger className="w-48">
+          <SelectTrigger className="w-full sm:w-48">
             <SelectValue placeholder="Status filtern" />
           </SelectTrigger>
           <SelectContent>
@@ -75,14 +75,15 @@ export default function AbrechnungenPage() {
       {/* Tabelle */}
       <Card>
         <CardContent className="pt-6">
+          <div className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Datum</TableHead>
                 <TableHead>Sägewerk</TableHead>
-                <TableHead>Lieferschein-Nr.</TableHead>
-                <TableHead>Bauer</TableHead>
-                <TableHead>Menge (FMO)</TableHead>
+                <TableHead className="hidden md:table-cell">Lieferschein-Nr.</TableHead>
+                <TableHead className="hidden lg:table-cell">Bauer</TableHead>
+                <TableHead className="hidden sm:table-cell">Menge (FMO)</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Betrag</TableHead>
                 <TableHead className="w-10">PDF</TableHead>
@@ -101,17 +102,17 @@ export default function AbrechnungenPage() {
                       {getSaegwerkName(abr.saegwerkId)}
                     </Link>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="hidden md:table-cell">
                     <Link href={`/abrechnungen/${abr.id}`} className="block font-mono text-sm">
                       {abr.lieferscheinNr}
                     </Link>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="hidden lg:table-cell">
                     <Link href={`/abrechnungen/${abr.id}`} className="block">
                       {getBauerName(abr.bauerId)}
                     </Link>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="hidden sm:table-cell">
                     <Link href={`/abrechnungen/${abr.id}`} className="block">
                       {berechneGesamtFmo(abr).toLocaleString("de-AT", { minimumFractionDigits: 2 })}
                     </Link>
@@ -152,6 +153,7 @@ export default function AbrechnungenPage() {
               )}
             </TableBody>
           </Table>
+          </div>
         </CardContent>
       </Card>
     </div>
