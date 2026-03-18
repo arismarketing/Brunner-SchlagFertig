@@ -23,7 +23,7 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-60 bg-[oklch(0.35_0.12_150)] text-white flex flex-col">
+    <aside className="fixed left-0 top-0 h-screen w-60 bg-[hsl(140,45%,22%)] text-white flex flex-col">
       {/* Logo / Branding */}
       <div className="px-5 py-6 border-b border-white/10">
         <div className="flex items-center gap-2.5">
@@ -54,7 +54,7 @@ export function Sidebar() {
                   : "text-green-100/80 hover:bg-white/10 hover:text-white"
               }`}
             >
-              <Icon className="h-4.5 w-4.5 shrink-0" />
+              <Icon className="h-5 w-5 shrink-0" />
               {item.label}
             </Link>
           );
