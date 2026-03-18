@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { StatusBadge } from "@/components/StatusBadge";
+import { FileText } from "lucide-react";
 import {
   ABRECHNUNGEN,
   SAEGEWERKE,
@@ -84,6 +85,7 @@ export default function AbrechnungenPage() {
                 <TableHead>Menge (FMO)</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Betrag</TableHead>
+                <TableHead className="w-10">PDF</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -127,11 +129,23 @@ export default function AbrechnungenPage() {
                       })}
                     </Link>
                   </TableCell>
+                  <TableCell>
+                    <a
+                      href={`/demo/${abr.id}.pdf`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-muted-foreground hover:text-primary transition-colors"
+                      title="Original-PDF anzeigen"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <FileText className="h-4 w-4" />
+                    </a>
+                  </TableCell>
                 </TableRow>
               ))}
               {filtered.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
+                  <TableCell colSpan={8} className="text-center text-muted-foreground py-8">
                     Keine Abrechnungen gefunden.
                   </TableCell>
                 </TableRow>

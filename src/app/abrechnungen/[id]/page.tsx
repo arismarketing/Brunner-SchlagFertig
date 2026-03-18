@@ -15,10 +15,11 @@ import {
   TableFooter,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { StatusBadge, KonfidenzBadge } from "@/components/StatusBadge";
 import { InlineEditCell } from "@/components/InlineEditCell";
-import { ArrowLeft, Check, X, Download } from "lucide-react";
+import { ArrowLeft, Check, X, Upload, FileText, Mail } from "lucide-react";
 import {
   ABRECHNUNGEN,
   getSaegwerkName,
@@ -38,6 +39,7 @@ export default function AbrechnungDetailPage() {
   );
   const [aufschlagProzent, setAufschlagProzent] = useState(abrechnung?.aufschlagProzent ?? 8);
   const [transportkosten, setTransportkosten] = useState(abrechnung?.transportkosten ?? 280);
+  const [pdfOpen, setPdfOpen] = useState(false);
 
   if (!abrechnung) {
     return (
@@ -53,6 +55,7 @@ export default function AbrechnungDetailPage() {
   const bauer = getBauer(abrechnung.bauerId);
   const ustSatz = bauer?.ustStatus === "ea-rechner" ? 0.2 : 0.13;
   const ustLabel = bauer?.ustStatus === "ea-rechner" ? "20% USt" : "13% USt (pauschaliert)";
+  const pdfUrl = `/demo/${abrechnung.id}.pdf`;
 
   // Berechnungen
   const holzwertSumme = positionen.reduce(
@@ -89,11 +92,15 @@ export default function AbrechnungDetailPage() {
         <div className="flex-1">
           <h1 className="text-2xl font-bold">Abrechnung {abrechnung.lieferscheinNr}</h1>
         </div>
+        <Badge className="bg-blue-50 text-blue-700 hover:bg-blue-50 gap-1">
+          <Mail className="h-3 w-3" />
+          Quelle: E-Mail
+        </Badge>
         <StatusBadge status={abrechnung.status} />
         <KonfidenzBadge level={abrechnung.konfidenz} />
       </div>
 
-      {/* Meta-Daten */}
+      {/* Meta-Daten + PDF-Button */}
       <Card className="mb-6">
         <CardContent className="pt-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -129,12 +136,53 @@ export default function AbrechnungDetailPage() {
               <p className="font-medium">{gesamtFmo.toLocaleString("de-AT", { minimumFractionDigits: 2 })} FMO</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Kundennr.</p>
-              <p className="font-medium font-mono">{bauer?.kundennr}</p>
+              <p className="text-sm text-muted-foreground">Original-PDF</p>
+              <Button
+                variant="outline"
+                size="sm"
+                className="mt-1 gap-1.5"
+                onClick={() => setPdfOpen(!pdfOpen)}
+              >
+                <FileText className="h-3.5 w-3.5" />
+                {pdfOpen ? "PDF ausblenden" : "PDF anzeigen"}
+              </Button>
             </div>
           </div>
         </CardContent>
       </Card>
+
+      {/* PDF-Viewer */}
+      {pdfOpen && (
+        <Card className="mb-6">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-lg flex items-center gap-2">
+                <FileText className="h-5 w-5" />
+                Original-Gutschrift (PDF)
+              </CardTitle>
+              <div className="flex gap-2">
+                <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline" size="sm">
+                    In neuem Tab öffnen
+                  </Button>
+                </a>
+                <Button variant="ghost" size="sm" onClick={() => setPdfOpen(false)}>
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="border rounded-lg overflow-hidden bg-gray-50">
+              <iframe
+                src={pdfUrl}
+                className="w-full h-[600px]"
+                title="Original-Gutschrift PDF"
+              />
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Positionen */}
       <Card className="mb-6">
@@ -288,10 +336,17 @@ export default function AbrechnungDetailPage() {
         </Button>
         <Button
           variant="outline"
-          onClick={() => toast.info("CSV-Export wird vorbereitet...")}
+          onClick={() => toast.info("Export nach AEVO wird vorbereitet...")}
         >
-          <Download className="h-4 w-4 mr-2" />
-          CSV exportieren
+          <Upload className="h-4 w-4 mr-2" />
+          In AEVO exportieren
+        </Button>
+        <Button
+          variant="ghost"
+          onClick={() => setPdfOpen(true)}
+        >
+          <FileText className="h-4 w-4 mr-2" />
+          Original-PDF
         </Button>
       </div>
     </div>
